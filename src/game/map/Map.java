@@ -42,11 +42,6 @@ public class Map implements Cloneable, Serializable {
                 this.map[this.startPosition[X]][this.startPosition[Y]] = new Road();
             }
             this.startPosition = newPosition;
-            this.decreaseAllowedMovement(movement);
-            System.out.println("Moved");
-        } else {
-            System.out.println("Not Moved");
-            //there should check some field types
         }
     }
 
@@ -56,11 +51,15 @@ public class Map implements Cloneable, Serializable {
 
 
     private boolean isNextMoveAllowed(int[] newPosition) {
+        return isValidArrayIndex(newPosition) &&
+                this.map[newPosition[X]][newPosition[Y]].allowedToMoveHere();
+    }
+
+    private boolean isValidArrayIndex(int[] newPosition) {
         return newPosition[X] < size[X] &&
                 newPosition[X] >= 0 &&
                 newPosition[Y] < size[Y] &&
-                newPosition[Y] >= 0 &&
-                this.map[newPosition[X]][newPosition[Y]].allowedToMoveHere();
+                newPosition[Y] >= 0;
     }
 
     private void decreaseAllowedMovement(Movement movement) {
@@ -98,14 +97,19 @@ public class Map implements Cloneable, Serializable {
         return this.allowedMovementHelpers;
     }
 
-    public void useMovemenetHelper(Movement movement, MovementHelper movementHelper){
+    public void useMovementHelper(Movement movement, MovementHelper movementHelper){
         int[] newPosition = getNewPosition(movement.getWhereToMove());
-        Field field = map[newPosition[X]][newPosition[Y]];
-        if (field instanceof Rock  && movementHelper instanceof Dinamit) {
-            map[newPosition[X]][newPosition[Y]] = new Praire();
+        if (isValidArrayIndex(newPosition)) {
+            Field field = map[newPosition[X]][newPosition[Y]];
+            if (field instanceof Rock && movementHelper instanceof Dinamit) {
+                map[newPosition[X]][newPosition[Y]] = new Praire();
+            }
+            if (field instanceof Water && movementHelper instanceof Bridge) {
+                map[newPosition[X]][newPosition[Y]] = new Praire();
+            }
+        } else {
+            System.out.print("Something went Wrong!");
         }
-        if (field instanceof Water && movementHelper instanceof Bridge) {
-            map[newPosition[X]][newPosition[Y]] = new Praire();
-        }
+        System.out.print("Done");
     }
 }
