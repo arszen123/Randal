@@ -3,7 +3,7 @@ package game.fielDecorator;
 import game.fielDecorator.baseDecorator.FileObjectDecorator;
 import game.map.Map;
 
-public class MapLoader extends FileObjectDecorator{
+public class MapLoader extends FileObjectDecorator {
 
     public MapLoader() {
         super.dirName = "maps";

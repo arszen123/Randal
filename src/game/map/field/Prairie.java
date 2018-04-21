@@ -1,13 +1,14 @@
 package game.map.field;
 
-public class Road implements Field {
+public class Prairie implements Field {
+
     @Override
     public boolean allowedToMoveHere() {
-        return false;
+        return true;
     }
 
     @Override
     public String drawingElement() {
-        return "R";
+        return "P";
     }
 }

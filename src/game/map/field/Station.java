@@ -1,15 +1,11 @@
 package game.map.field;
 
-import game.movement.helper.MovementHelper;
-
 public class Station implements Field {
+
+    private boolean touched = false;
+
     @Override
     public boolean allowedToMoveHere() {
-        return allowedToMoveHere(null);
-    }
-
-    @Override
-    public boolean allowedToMoveHere(MovementHelper movementHelper) {
         return true;
     }
 
@@ -17,5 +13,13 @@ public class Station implements Field {
     @Override
     public String drawingElement() {
         return "S";
+    }
+
+    public boolean isTouched() {
+        return touched;
+    }
+
+    public void setTouched(boolean touched) {
+        this.touched = touched;
     }
 }

@@ -1,16 +1,9 @@
 package game.map.field;
 
-import game.movement.helper.Dinamit;
-import game.movement.helper.MovementHelper;
-
 public class Rock implements Field {
+
     @Override
     public boolean allowedToMoveHere() {
-        return allowedToMoveHere(null);
-    }
-
-    @Override
-    public boolean allowedToMoveHere(MovementHelper movementHelper) {
         return false;
     }
 

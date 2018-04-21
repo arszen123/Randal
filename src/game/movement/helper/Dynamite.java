@@ -1,9 +1,9 @@
 package game.movement.helper;
 
 /**
- * You can go through the water with Bridge
+ * You cant explode dinamits on Rocks.
  */
-public class Bridge implements MovementHelper {
+public class Dynamite implements MovementHelper {
     public String getName() {
         return this.getClass().getSimpleName();
     }

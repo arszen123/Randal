@@ -2,72 +2,62 @@ package game.fielDecorator.baseDecorator;
 
 import game.fielDecorator.MapLoader;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileObjectDecorator {
 
-    private String basePath = MapLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "data/";
+    private final String basePath = MapLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "data/";
     protected String dirName;
 
+    /**
+     * Loads saved object from file
+     *
+     * @param fileName Where to load the Object
+     * @return The saved Object
+     */
     public Object loadObject(String fileName) {
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
         Object obj = null;
-        try {
-            fis = new FileInputStream(basePath + dirName + "/" + fileName);
-            ois = new ObjectInputStream(fis);
-            obj = ois.readObject();
-        } catch (Exception e) {
-            System.out.println("Failed: " + e.getMessage());
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (Exception e){
+        if (isDirectoryAccessable()) {
+            try (FileInputStream fis = new FileInputStream(basePath + dirName + "/" + fileName); ObjectInputStream ois = new ObjectInputStream(fis)) {
+                obj = ois.readObject();
+            } catch (Exception e) {
 
-                }
-            }
-            if(ois != null) {
-                try {
-                    ois.close();
-                } catch (Exception e){
-
-                }
             }
         }
         return obj;
     }
 
+    /**
+     * Write Object to file
+     *
+     * @param fileName The name of the file where to write the object
+     * @param obj      The object to write.
+     * @return true if success
+     */
     public boolean saveObject(String fileName, Object obj) {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
         boolean success = true;
-        try {
-            fos = new FileOutputStream(basePath + dirName + "/" + fileName);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(obj);
-        } catch (Exception e) {
-            success = false;
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (Exception e){
-
-                }
-            }
-            if(oos != null) {
-                try {
-                    oos.close();
-                } catch (Exception e){
-
-                }
+        if (isDirectoryAccessable()) {
+            try (FileOutputStream fos = new FileOutputStream(basePath + dirName + "/" + fileName); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                oos.writeObject(obj);
+            } catch (Exception e) {
+                success = false;
             }
         }
         return success;
+    }
+
+    private boolean isDirectoryAccessable() {
+        try {
+            if (Files.notExists(Paths.get(basePath + dirName))) {
+                new File(basePath + dirName).mkdirs();
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(basePath + dirName + " is not writable/readable or it's not exist.");
+        }
+        return false;
     }
 
 }
